@@ -1,7 +1,7 @@
 schedule
 discord
 pytz
-dotenv
+python-dotenv
 bs4
 urllib
 asyncio
