@@ -23,6 +23,11 @@ d_error = discord.ext.commands.errors
 bully = Bully()
 menu = Menu()
 
+@tasks.loop(seconds=30.0)
+async def change_status():
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=bully.get_next_status()))
+
+
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}!\nResponding to "{bot.command_prefix}"')
@@ -31,6 +36,7 @@ async def on_ready():
 
     schedule.every().day.at("14:00", pytz.timezone("Europe/Brussels")).do(run_daily_task)
     check_clock.start()
+    change_status.start()
 
 
 async def send_menu():
