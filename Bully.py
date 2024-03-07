@@ -19,7 +19,23 @@ class Bully:
             "Ooit al potje MakeItMeme gewonnen? Nee? dacht ik al...",
             "Niemand is perfect.... alleen laat jij het wel erg merken"
         ]
+        self.statuses = [
+            "Cumming on some hair",
+            "Speeding to the bus",
+            "Getting interviewed about beer",
+            "Madonna",
+            "Stalking a lady",
+            "Laughing with Xandra",
+            "Sending projects to friends",
+            "Sucking d*cks to pass exams"
+        ]
         self.bully_chance = 2
+        self.status_count = 0
+
+    def get_next_status(self):
+        if self.status_count >  len(self.statuses) - 1:
+            self.status_count = 0
+        return self.statuses[self.status_count]
 
     def should_bully(self):
         if random.random() < self.bully_chance / 10:
@@ -27,7 +43,7 @@ class Bully:
         return False
 
     def get_random_insult(self):
-        return self.insults[random.randint(0, len(self.insults) - 1)]
+        return random.choice(self.insults)
 
     def insult(self):
         return self.get_random_insult()
