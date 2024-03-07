@@ -1,0 +1,7 @@
+schedule
+discord
+pytz
+dotenv
+bs4
+urllib
+asyncio
