@@ -29,7 +29,7 @@ async def on_ready():
 
     menu.set_bikkelchannel(bot.get_channel(menu.bikkel_channel_id))
 
-    schedule.every().day.at("17:41", pytz.timezone("Europe/Brussels")).do(run_daily_task)
+    schedule.every().day.at("14:00", pytz.timezone("Europe/Brussels")).do(run_daily_task)
     check_clock.start()
 
 
