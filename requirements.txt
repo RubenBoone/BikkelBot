@@ -3,5 +3,5 @@ discord
 pytz
 python-dotenv
 bs4
-urllib
+urllib3
 asyncio
