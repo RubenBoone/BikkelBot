@@ -20,22 +20,18 @@ class Bully:
             "Niemand is perfect.... alleen laat jij het wel erg merken"
         ]
         self.statuses = [
-            "Cumming on some hair",
-            "Speeding to the bus",
+            "Cumming on hair",
             "Getting interviewed about beer",
             "Madonna",
-            "Stalking a lady",
-            "Laughing with Xandra",
-            "Sending projects to friends",
-            "Sucking d*cks to pass exams"
+            "A lady",
+            "Xandra's mom",
+            "Plagiarism",
+            "D*ck sucking to pass exams"
         ]
         self.bully_chance = 2
-        self.status_count = 0
 
     def get_next_status(self):
-        if self.status_count >  len(self.statuses) - 1:
-            self.status_count = 0
-        return self.statuses[self.status_count]
+        return random.choice(self.statuses)
 
     def should_bully(self):
         if random.random() < self.bully_chance / 10:

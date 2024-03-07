@@ -25,7 +25,7 @@ menu = Menu()
 
 @tasks.loop(seconds=30.0)
 async def change_status():
-    await bot.change_presence(activity=discord.Game(name=bully.get_next_status()))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=bully.get_next_status()))
 
 
 @bot.event
