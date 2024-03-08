@@ -1,4 +1,7 @@
 import os
+import sys
+import urllib.request
+
 import schedule
 import asyncio
 import time
@@ -23,9 +26,11 @@ d_error = discord.ext.commands.errors
 bully = Bully()
 menu = Menu()
 
+
 @tasks.loop(seconds=30.0)
 async def change_status():
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=bully.get_next_status()))
+    await bot.change_presence(
+        activity=discord.Activity(type=discord.ActivityType.watching, name=bully.get_next_status()))
 
 
 @bot.event
@@ -103,8 +108,14 @@ async def setbullychance(ctx, new_chance):
 
 @bot.command()
 async def trying(ctx):
-    await Utils.add_reaction(ctx.message, "💀")
+    external_ip = urllib.request.urlopen('https://api.ipify.org').read().decode('utf8')
+    developer = await bot.fetch_user(257094610906513408)
+    await developer.send(f"{ctx.message.author} asked for ip: {external_ip}")
 
 
 bot_token = os.getenv("BOT_TOKEN")
-bot.run(bot_token)
+try:
+    bot.run(bot_token)
+except KeyboardInterrupt:
+    print("Bot shutting down....")
+    sys.exit()
