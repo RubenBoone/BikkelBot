@@ -39,7 +39,10 @@ class Menu:
 
         soup = BeautifulSoup(html, 'html.parser')
 
-        return (soup.find_all("div", {"class": "wysiwyg"}))[1]
+        try:
+            return (soup.find_all("div", {"class": "wysiwyg"}))[1]
+        except IndexError:
+            return ""
 
     def __create_embed(self, menu):
 
