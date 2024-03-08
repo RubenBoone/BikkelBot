@@ -11,9 +11,6 @@ class Bully:
 
         self.__read_data()
 
-        print(self.insults)
-        print(self.statuses)
-
     def get_next_status(self):
         return random.choice(self.statuses)
 
