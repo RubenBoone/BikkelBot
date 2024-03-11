@@ -11,9 +11,6 @@ class Menu:
         self.bikkel_channel = None
         self.posted_message_today = False
 
-
-        self.__create_embed(self.__get_menu_items())
-
     def set_bikkelchannel(self, channel):
         self.bikkel_channel = channel
 

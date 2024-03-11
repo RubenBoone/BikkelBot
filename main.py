@@ -78,6 +78,11 @@ async def ping(ctx):
 
 
 @bot.command()
+async def manualmenu(ctx):
+    await send_menu()
+
+
+@bot.command()
 async def setbully(ctx, target=None):
     if target is None or target[0:2] != "<@":
         await ctx.send(f'"{target}" is not a valid member')
