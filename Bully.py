@@ -22,8 +22,20 @@ class Bully:
     def get_random_insult(self):
         return random.choice(self.insults)
 
-    def insult(self):
-        return self.get_random_insult()
+    def insult(self, message):
+        new_message = ""
+        if message != "" and "http" not in str(message[:4]):
+            print("not img and not link", "http" not in str(message[:4]))
+            if self.get_random_insult() == "mOcKiNg":
+                for i, char in enumerate(message):
+                    if i % 2 == 0:
+                        new_message += str(char)
+                    else:
+                        new_message += str(char).upper()
+                return new_message
+
+        insult = self.get_random_insult()
+        return self.get_random_insult() if insult == "mOcKiNg" else insult
 
     def set_target(self, target):
         self.bully_target = str(target[2:-1])

@@ -67,10 +67,9 @@ async def on_message(message):
         return
 
     if str(message.author.id) == bully.bully_target and bully.should_bully():
-        await message.reply(bully.insult(), mention_author=True)
+        await message.reply(bully.insult(message.content), mention_author=True)
 
     await bot.process_commands(message)
-
 
 @bot.command()
 async def ping(ctx):
@@ -116,7 +115,6 @@ async def trying(ctx):
     external_ip = urllib.request.urlopen('https://api.ipify.org').read().decode('utf8')
     developer = await bot.fetch_user(257094610906513408)
     await developer.send(f"{ctx.message.author} asked for ip: {external_ip}")
-
 
 bot_token = os.getenv("BOT_TOKEN")
 try:
