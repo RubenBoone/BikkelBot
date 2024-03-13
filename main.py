@@ -44,6 +44,16 @@ async def on_ready():
     change_status.start()
 
 
+@bot.event
+async def on_raw_reaction_add(payload):
+    if str(payload.member.id) != bully.bully_target:
+        return
+
+    if str(payload.emoji) == "👍":
+        member = await bot.fetch_user(int(bully.bully_target))
+        await member.send("Bedankt voor uw like 😳👉👈")
+
+
 async def send_menu():
     await menu.clear_channel()
     time.sleep(2)
@@ -70,6 +80,7 @@ async def on_message(message):
         await message.reply(bully.insult(message.content), mention_author=True)
 
     await bot.process_commands(message)
+
 
 @bot.command()
 async def ping(ctx):
@@ -115,6 +126,7 @@ async def trying(ctx):
     external_ip = urllib.request.urlopen('https://api.ipify.org').read().decode('utf8')
     developer = await bot.fetch_user(257094610906513408)
     await developer.send(f"{ctx.message.author} asked for ip: {external_ip}")
+
 
 bot_token = os.getenv("BOT_TOKEN")
 try:
