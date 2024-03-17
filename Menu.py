@@ -37,7 +37,10 @@ class Menu:
         soup = BeautifulSoup(html, 'html.parser')
 
         try:
-            return (soup.find_all("div", {"class": "wysiwyg"}))[1]
+            menu = (soup.find_all("div", {"class": "wysiwyg"}))
+            if len(soup.find_all("div", {"class": "wysiwyg"})) > 3:
+                return menu[0]
+            return menu[1]
         except IndexError:
             return ""
 
