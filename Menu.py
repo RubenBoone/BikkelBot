@@ -5,6 +5,8 @@ import datetime
 from bs4 import BeautifulSoup
 
 
+datetime.datetime.now().weekday()
+
 class Menu:
     def __init__(self):
         self.bikkel_channel_id = 1214894554310774815
@@ -36,13 +38,13 @@ class Menu:
 
         soup = BeautifulSoup(html, 'html.parser')
 
-        try:
-            menu = (soup.find_all("div", {"class": "wysiwyg"}))
-            if len(soup.find_all("div", {"class": "wysiwyg"})) > 3:
-                return menu[0]
-            return menu[1]
-        except IndexError:
+        day_for_tomorrow = datetime.datetime.now().weekday() + 1
+        if day_for_tomorrow == 7:
+            day_for_tomorrow = 0
+        if day_for_tomorrow >= 4:
             return ""
+
+        return (soup.find_all("div", {"class": "wysiwyg"}))[day_for_tomorrow]
 
     def __create_embed(self, menu):
 
