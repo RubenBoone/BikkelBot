@@ -4,6 +4,8 @@ import discord
 import datetime
 from bs4 import BeautifulSoup
 
+datetime.datetime.now().weekday()
+
 
 class Menu:
     def __init__(self):
@@ -23,31 +25,33 @@ class Menu:
     async def clear_channel(self):
         await self.bikkel_channel.purge()
 
-    def get_menu(self):
-        menu = self.__get_menu_items()
-        return self.__create_embed(menu)
-
-    def __get_menu_items(self):
+    def get_webpage(self):
         fp = urllib.request.urlopen("https://www.pxl.be/Pub/Studenten/Voorzieningen-Student/Catering/" +
                                     "Catering-Weekmenu-Campus-Diepenbeek.html")
         mybytes = fp.read()
-        html = mybytes.decode("utf8")
         fp.close()
+        return mybytes.decode("utf8")
 
-        soup = BeautifulSoup(html, 'html.parser')
+    def parse_menu_items(self):
+        current_date = datetime.datetime.now().date()
 
-        try:
-            menu = (soup.find_all("div", {"class": "wysiwyg"}))
-            if len(soup.find_all("div", {"class": "wysiwyg"})) > 3:
-                return menu[0]
-            return menu[1]
-        except IndexError:
-            return ""
+        soup = BeautifulSoup(self.get_webpage(), 'html.parser')
+        rest_of_week_menu = soup.find_all("div", class_="catering")
 
-    def __create_embed(self, menu):
+        for day in rest_of_week_menu:
+            print(datetime.datetime.strptime(str(day.find_next("h2"))[-16:-6], "%d/%m/%Y").date(), current_date + datetime.timedelta(days=1))
+            if datetime.datetime.strptime(str(day.find_next("h2"))[-16:-6], "%d/%m/%Y").date() == current_date + datetime.timedelta(days=1):
+                return day.find_next("div", class_="wysiwyg")
+
+        return ""
+
+
+    def get_embed(self):
 
         today = datetime.datetime.today()
         tomorrow = today + datetime.timedelta(days=1)
+
+        menu = self.parse_menu_items()
 
         if tomorrow.weekday() > 4 or menu == "":
             embed = discord.Embed(title=f"No menu for {tomorrow.strftime('%A %d/%m')}",
