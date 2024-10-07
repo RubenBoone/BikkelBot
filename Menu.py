@@ -39,8 +39,13 @@ class Menu:
         rest_of_week_menu = soup.find_all("div", class_="catering")
 
         for day in rest_of_week_menu:
-            print(datetime.datetime.strptime(str(day.find_next("h2"))[-16:-6], "%d/%m/%Y").date(), current_date + datetime.timedelta(days=1))
-            if datetime.datetime.strptime(str(day.find_next("h2"))[-16:-6], "%d/%m/%Y").date() == current_date + datetime.timedelta(days=1):
+            myDate = str(day.find_next("h2"))[-16:-6]
+            
+            if myDate[0] == "(":
+                myDate = myDate[1:]
+
+            myDate = datetime.datetime.strptime(myDate, "%d/%m/%Y").date()
+            if myDate == current_date + datetime.timedelta(days=1):
                 return day.find_next("div", class_="wysiwyg")
 
         return ""
