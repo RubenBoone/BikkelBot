@@ -38,15 +38,19 @@ class Menu:
         soup = BeautifulSoup(self.get_webpage(), 'html.parser')
         rest_of_week_menu = soup.find_all("div", class_="catering")
 
-        for day in rest_of_week_menu:
-            myDate = str(day.find_next("h2"))[-16:-6]
-            
-            if myDate[0] == "(":
-                myDate = myDate[1:]
+        try:
+            for day in rest_of_week_menu:
+                myDate = str(day.find_next("h2"))[-16:-6]
+                
+                if myDate[0] == "(":
+                    myDate = myDate[1:]
 
-            myDate = datetime.datetime.strptime(myDate, "%d/%m/%Y").date()
-            if myDate == current_date + datetime.timedelta(days=1):
-                return day.find_next("div", class_="wysiwyg")
+                myDate = datetime.datetime.strptime(myDate, "%d/%m/%Y").date()
+                if myDate == current_date + datetime.timedelta(days=1):
+                    return day.find_next("div", class_="wysiwyg")
+                
+        except:
+            return "404"
 
         return ""
 
@@ -58,7 +62,14 @@ class Menu:
 
         menu = self.parse_menu_items()
 
-        if tomorrow.weekday() > 4 or menu == "":
+        if menu == "404":
+            embed = discord.Embed(title="KUTZOOI",
+                                    url="https://www.pxl.be/Pub/Studenten/Voorzieningen-Student/Catering/Catering-Weekmenu")
+            embed.add_field(name="",
+                            value="Ge zult zelf voor uwe fret moete zorgen. Die van den PXL updaten hunne website ni. Tkan ook zijn datm kapot is, eitherway PXL  zijn lozers. (En Devlin is de grootste)", inline=False)
+            embed.set_image(url="https://i.imgur.com/nKEJ5eM.gif")
+
+        elif tomorrow.weekday() > 4 or menu == "":
             embed = discord.Embed(title=f"No menu for {tomorrow.strftime('%A %d/%m')}",
                                   url="https://www.pxl.be/Pub/Studenten/Voorzieningen-Student/Catering/Catering-Weekmenu"
                                       "-Campus-Diepenbeek.html",
