@@ -3,9 +3,7 @@ import os
 import sys
 import urllib.request
 
-import schedule
 import asyncio
-import time
 
 import Utils
 from Bully import Bully
