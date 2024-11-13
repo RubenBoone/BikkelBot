@@ -1,3 +1,4 @@
+import datetime
 import os
 import sys
 import urllib.request
@@ -39,7 +40,6 @@ async def on_ready():
 
     menu.set_bikkelchannel(bot.get_channel(menu.bikkel_channel_id))
 
-    schedule.every().day.at("14:00", pytz.timezone("Europe/Brussels")).do(run_daily_task)
     check_clock.start()
     change_status.start()
 
@@ -62,13 +62,18 @@ async def send_menu():
     await Utils.add_reaction(message, "👎")
 
 
-def run_daily_task():
+async def run_daily_task():
     asyncio.create_task(send_menu())
 
 
 @tasks.loop(seconds=60.0)
 async def check_clock():
-    schedule.run_pending()
+    target_timezone = pytz.timezone("Europe/Brussels")
+    now = datetime.now(target_timezone)
+
+    # Check if the current time matches 14:00 in the target timezone
+    if now.time() >= time(14, 0) and now.time() < time(14, 1):
+        await run_daily_task()
 
 
 @bot.event

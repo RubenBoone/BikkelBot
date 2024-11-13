@@ -25,7 +25,6 @@ class Bully:
     def insult(self, message):
         new_message = ""
         if message != "" and "http" not in str(message[:4]):
-            print("not img and not link", "http" not in str(message[:4]))
             if self.get_random_insult() == "mOcKiNg":
                 for i, char in enumerate(message):
                     if i % 2 == 0:
