@@ -8,6 +8,7 @@ import asyncio
 import Utils
 from Bully import Bully
 from Menu import Menu
+from time import sleep
 
 import discord
 import pytz
@@ -54,7 +55,7 @@ async def on_raw_reaction_add(payload):
 
 async def send_menu():
     await menu.clear_channel()
-    time.sleep(2)
+    sleep(2)
     message = await menu.bikkel_channel.send(embed=menu.get_embed())
     await Utils.add_reaction(message, "👍")
     await Utils.add_reaction(message, "👎")

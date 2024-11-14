@@ -47,9 +47,11 @@ class Menu:
 
                 myDate = datetime.datetime.strptime(myDate, "%d/%m/%Y").date()
                 if myDate == current_date + datetime.timedelta(days=1):
-                    return day.find_next("div", class_="wysiwyg")
+                    the_menu = day.find_next("div", class_="wysiwyg")
+                    return the_menu
                 
-        except:
+        except Exception as e:
+            print(e)
             return "404"
 
         return ""
@@ -62,25 +64,25 @@ class Menu:
 
         menu = self.parse_menu_items()
 
+        print(menu)
+
         if menu == "404":
             embed = discord.Embed(title="KUTZOOI",
-                                    url="https://www.pxl.be/Pub/Studenten/Voorzieningen-Student/Catering/Catering-Weekmenu")
+                                    url="https://www.pxl.be/Pub/Studenten/Voorzieningen-Student/Catering/Catering-Weekmenu-Campus-Diepenbeek.html")
             embed.add_field(name="",
                             value="Ge zult zelf voor uwe fret moete zorgen. Die van den PXL updaten hunne website ni. Tkan ook zijn datm kapot is, eitherway PXL  zijn lozers. (En Devlin is de grootste)", inline=False)
             embed.set_image(url="https://i.imgur.com/nKEJ5eM.gif")
 
         elif tomorrow.weekday() > 4 or menu == "":
             embed = discord.Embed(title=f"No menu for {tomorrow.strftime('%A %d/%m')}",
-                                  url="https://www.pxl.be/Pub/Studenten/Voorzieningen-Student/Catering/Catering-Weekmenu"
-                                      "-Campus-Diepenbeek.html",
+                                  url="https://www.pxl.be/Pub/Studenten/Voorzieningen-Student/Catering/Catering-Weekmenu-Campus-Diepenbeek.html",
                                   colour=0x00b0f4,
                                   timestamp=datetime.datetime.now())
             embed.set_footer(text="Bikkel ze een andere keer!",
                              icon_url="https://www.pxl.be/img/logo.png")
         else:
             embed = discord.Embed(title=tomorrow.strftime('%A %d/%m'),
-                                  url="https://www.pxl.be/Pub/Studenten/Voorzieningen-Student/Catering/Catering-Weekmenu"
-                                      "-Campus-Diepenbeek.html",
+                                  url="https://www.pxl.be/Pub/Studenten/Voorzieningen-Student/Catering/Catering-Weekmenu-Campus-Diepenbeek.html",
                                   colour=0x00b0f4,
                                   timestamp=datetime.datetime.now())
 
