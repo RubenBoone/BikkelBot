@@ -40,6 +40,8 @@ client.on(Events.ClientReady, () => {
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
+    if (!interaction.guild) return; //prevent DMs from being processed
+
     ping(interaction);
 
     // Menu commands
