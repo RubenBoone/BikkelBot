@@ -1,4 +1,4 @@
-import { ActionRowBuilder, UserSelectMenuBuilder, ComponentType } from "discord.js";
+import { ActionRowBuilder, UserSelectMenuBuilder, ComponentType, MessageFlags } from "discord.js";
 
 const getInsultChance = (interaction, bully) => {
     if (interaction.commandName !== "getinsultchance") return;
@@ -28,7 +28,8 @@ const setTarget = async (interaction, bully) => {
 
     const targetReply = await interaction.reply({
         content: "Select a user to target",
-        components: [new ActionRowBuilder().addComponents(target)]
+        components: [new ActionRowBuilder().addComponents(target)],
+        flags: MessageFlags.Ephemeral
     });
 
     const targetCollector = targetReply.createMessageComponentCollector(

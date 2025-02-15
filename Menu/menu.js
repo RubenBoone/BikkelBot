@@ -24,6 +24,7 @@ class Menu {
             components: [
                 new ActionRowBuilder().addComponents(channel),
             ],
+            flags: MessageFlags.Ephemeral
         });
 
         const channelCollector = reply.createMessageComponentCollector({
