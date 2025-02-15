@@ -1,7 +1,0 @@
-schedule
-discord
-pytz
-python-dotenv
-bs4
-urllib3
-asyncio
