@@ -76,9 +76,11 @@ class Menu {
         if (!menus || !menus[day]) return null;
 
         const embed = new EmbedBuilder()
-            .setTitle(`📅 [Menu](${this.channel}) for ${day}`)
+            .setTitle(`📅 Menu for ${day}`)
             .setColor('#ae9a64')
-            .setDescription(menus[day].join('\n'));
+            .setDescription(menus[day].join('\n'))
+            .setFooter({ text: `Menu fetched from PXL website`, iconURL: "https://www.pxl.be/media/mn0phfug/image.png" })
+            .setAuthor({ name: "BikkelBotje MenuService", iconURL: "https://cdn.discordapp.com/app-icons/1214874304114855967/91703ab3402872d7e39b46cd057c0a61.png?size=256" });
 
         return embed;
     }
@@ -89,13 +91,15 @@ class Menu {
         const menu = await this.getMenuEmbed(getDateOfTommorow());
         interaction.client.channels.fetch(this.channel).then(async channel => {
             if (menu) {
+                await channel.send("[Link to site](" + this.menulink + ")");
                 const announcedMenu = await channel.send({ embeds: [menu] });
                 interaction ? interaction.reply({ content: "Menu announced.", flags: MessageFlags.Ephemeral }) : null;
 
                 announcedMenu.react("👍");
                 announcedMenu.react("👎");
             } else {
-                const announcedMenu = await channel.send(`There is no [menu](${this.channel}) available for tomorrow.`);
+                await channel.send("[Link to site](" + this.menulink + ")");
+                const announcedMenu = await channel.send(`There is no [menu](${this.menulink}) available for tomorrow.`);
                 interaction ? interaction.reply({ content: "No menu available for tomorrow.", flags: MessageFlags.Ephemeral }) : null;
 
                 announcedMenu.react("😔");
