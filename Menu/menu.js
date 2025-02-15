@@ -85,7 +85,7 @@ class Menu {
 
 
     async ManualMenu(interaction) {
-        clearChannel(this.channel);
+        clearChannel(interaction.client.channels.cache.get(this.channel));
         const menu = await this.getMenuEmbed(getDateOfTommorow());
         interaction.client.channels.fetch(this.channel).then(async channel => {
             if (menu) {
