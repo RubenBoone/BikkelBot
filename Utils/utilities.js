@@ -22,7 +22,7 @@ const getDateOfTommorow = () => {
     return `${day}-${month}-${year}`;
 }
 
-const scheduleMenuAnnouncement = (menu) => {
+const scheduleMenuAnnouncement = (client, menu) => {
 
     const now = new Date();
     const nextRun = new Date()
@@ -36,8 +36,8 @@ const scheduleMenuAnnouncement = (menu) => {
     console.log(`Next task scheduled at: ${nextRun.toLocaleString("nl-NL")}`);
 
     setTimeout(() => {
-        menu.ManualMenu();
-        setInterval((menu.ManualMenu(), 24 * 60 * 60 * 1000));
+        menu.ManualMenu(null, client);
+        setInterval(() => menu.ManualMenu(), 24 * 60 * 60 * 1000);
     }, AnnounceMenuTimer);
 }
 

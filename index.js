@@ -35,7 +35,7 @@ client.on(Events.ClientReady, () => {
         client.user.setActivity({ name: bully.changeStatus(), type: ActivityType.Watching });
     }, 60_000);
 
-    scheduleMenuAnnouncement(menu);
+    scheduleMenuAnnouncement(client, menu);
 
 });
 

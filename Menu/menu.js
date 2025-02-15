@@ -86,26 +86,26 @@ class Menu {
     }
 
 
-    async ManualMenu(interaction) {
-        clearChannel(interaction.client.channels.cache.get(this.channel));
+    async ManualMenu(interaction, client = null) {
+        const channel = interaction === null ? client.channels.cache.get(this.channel) : interaction.client.channels.cache.get(this.channel);
+        clearChannel(channel);
+
         const menu = await this.getMenuEmbed(getDateOfTommorow());
-        interaction.client.channels.fetch(this.channel).then(async channel => {
-            if (menu) {
-                await channel.send("[Link to site](" + this.menulink + ")");
-                const announcedMenu = await channel.send({ embeds: [menu] });
-                interaction ? interaction.reply({ content: "Menu announced.", flags: MessageFlags.Ephemeral }) : null;
+        if (menu) {
+            await channel.send("[Link to site](" + this.menulink + ")");
+            const announcedMenu = await channel.send({ embeds: [menu] });
+            interaction ? interaction.reply({ content: "Menu announced.", flags: MessageFlags.Ephemeral }) : null;
 
-                announcedMenu.react("👍");
-                announcedMenu.react("👎");
-            } else {
-                await channel.send("[Link to site](" + this.menulink + ")");
-                const announcedMenu = await channel.send(`There is no [menu](${this.menulink}) available for tomorrow.`);
-                interaction ? interaction.reply({ content: "No menu available for tomorrow.", flags: MessageFlags.Ephemeral }) : null;
+            announcedMenu.react("👍");
+            announcedMenu.react("👎");
+        } else {
+            await channel.send("[Link to site](" + this.menulink + ")");
+            const announcedMenu = await channel.send(`There is no [menu](${this.menulink}) available for tomorrow.`);
+            interaction ? interaction.reply({ content: "No menu available for tomorrow.", flags: MessageFlags.Ephemeral }) : null;
 
-                announcedMenu.react("😔");
-                announcedMenu.react("💔")
-            }
-        });
+            announcedMenu.react("😔");
+            announcedMenu.react("💔")
+        }
     }
 }
 export { Menu };
