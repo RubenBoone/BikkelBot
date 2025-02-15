@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ChannelSelectMenuBuilder, ChannelType, ComponentType, MessageFlags, EmbedBuilder, Embed } from "discord.js";
 import { readData, updateData } from "../Utils/datahandler.js";
-import { extractDate, getDateOfTommorow } from "../Utils/utilities.js";
+import { clearChannel, extractDate, getDateOfTommorow } from "../Utils/utilities.js";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
@@ -76,7 +76,7 @@ class Menu {
         if (!menus || !menus[day]) return null;
 
         const embed = new EmbedBuilder()
-            .setTitle(`📅 Menu for ${day}`)
+            .setTitle(`📅 [Menu](${this.channel}) for ${day}`)
             .setColor('#ae9a64')
             .setDescription(menus[day].join('\n'));
 
@@ -85,6 +85,7 @@ class Menu {
 
 
     async ManualMenu(interaction) {
+        clearChannel(this.channel);
         const menu = await this.getMenuEmbed(getDateOfTommorow());
         interaction.client.channels.fetch(this.channel).then(async channel => {
             if (menu) {
@@ -94,7 +95,7 @@ class Menu {
                 announcedMenu.react("👍");
                 announcedMenu.react("👎");
             } else {
-                const announcedMenu = await channel.send("There is no menu available for tomorrow.");
+                const announcedMenu = await channel.send(`There is no [menu](${this.channel}) available for tomorrow.`);
                 interaction ? interaction.reply({ content: "No menu available for tomorrow.", flags: MessageFlags.Ephemeral }) : null;
 
                 announcedMenu.react("😔");
