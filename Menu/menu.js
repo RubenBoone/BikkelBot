@@ -5,7 +5,8 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 
 class Menu {
-    constructor() {
+    constructor(client) {
+        this.client = client;
         this.settings = readData("./Data/menuSettings.json");
         this.channel = this.settings["channel"];
         this.menulink = this.settings["menulink"];
@@ -87,8 +88,8 @@ class Menu {
     }
 
 
-    async ManualMenu(interaction, client = null) {
-        const channel = interaction === null ? client.channels.cache.get(this.channel) : interaction.client.channels.cache.get(this.channel);
+    async ManualMenu(interaction) {
+        const channel = this.client.channels.cache.get(this.channel);
         clearChannel(channel);
 
         const menu = await this.getMenuEmbed(getDateOfTommorow());

@@ -28,7 +28,7 @@ client.on(Events.ClientReady, () => {
     console.log(`Logged in as ${client.user.tag}`);
 
     bully = new Bully();
-    menu = new Menu();
+    menu = new Menu(client);
 
     // Run the changeStatus function every minute
     setInterval(() => {
