@@ -41,4 +41,11 @@ const scheduleMenuAnnouncement = (client, menu) => {
     }, AnnounceMenuTimer);
 }
 
-export { clearChannel, extractDate, getDateOfTommorow, scheduleMenuAnnouncement };
+const clearRole = (client, roleId) => {
+    const role = client.guilds.roles.cache.get(roleId);
+    role.members.forEach(member => {
+        member.roles.remove(role);
+    });
+}
+
+export { clearChannel, extractDate, getDateOfTommorow, scheduleMenuAnnouncement, clearRole };

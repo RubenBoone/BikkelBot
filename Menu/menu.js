@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ChannelSelectMenuBuilder, ChannelType, ComponentType, MessageFlags, EmbedBuilder, Embed } from "discord.js";
 import { readData, updateData } from "../Utils/datahandler.js";
-import { clearChannel, extractDate, getDateOfTommorow } from "../Utils/utilities.js";
+import { clearChannel, extractDate, getDateOfTommorow, clearRole } from "../Utils/utilities.js";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
@@ -93,6 +93,7 @@ class Menu {
     async ManualMenu(interaction) {
         const channel = this.client.channels.cache.get(this.channel);
         clearChannel(channel);
+        clearRole(this.client, this.bikkelRoleId);
 
         const menu = await this.getMenuEmbed(getDateOfTommorow());
         if (menu) {
