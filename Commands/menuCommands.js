@@ -10,4 +10,8 @@ const ManualMenu = async (interaction, menu) => {
     menu.ManualMenu(interaction);
 }
 
-export { SetMenuChannel, ManualMenu };
+const MenuReaction = (reaction, user, menu) => {
+    menu.MenuReaction(reaction, user);
+}
+
+export { SetMenuChannel, ManualMenu, MenuReaction };

@@ -3,7 +3,7 @@ import { restHandler } from './Utils/restHandler.js';
 import { Bully } from './Bully/bully.js';
 import { Menu } from './Menu/menu.js';
 import { getInsultChance, setInsultChance, getTarget, setTarget, getActive, setActive } from './Commands/insultCommands.js';
-import { ManualMenu, SetMenuChannel } from './Commands/menuCommands.js';
+import { ManualMenu, SetMenuChannel, MenuReaction } from './Commands/menuCommands.js';
 import ping from './Commands/ping.js';
 import fs from 'fs';
 import { scheduleMenuAnnouncement } from './Utils/utilities.js';
@@ -68,5 +68,18 @@ client.on(Events.MessageCreate, async (message) => {
     }
 });
 
+client.on(Events.MessageReactionAdd, async (reaction, user) => {
+    if (user.bot) return;
+
+    if (reaction.emoji.name === "👍")
+        MenuReaction(reaction, user, menu);
+});
+
+client.on(Events.MessageReactionRemove, async (reaction, user) => {
+    if (user.bot) return;
+
+    if (reaction.emoji.name === "👍")
+        MenuReaction(reaction, user, menu);
+});
 
 client.login(config.token);

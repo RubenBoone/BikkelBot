@@ -10,6 +10,8 @@ class Menu {
         this.settings = readData("./Data/menuSettings.json");
         this.channel = this.settings["channel"];
         this.menulink = this.settings["menulink"];
+        this.bikkelRoleId = this.settings["bikkelRoleId"];
+        this.currentMenuMessage = "1347943792409579611";
     }
 
     async setChannel(interaction) {
@@ -108,6 +110,22 @@ class Menu {
             announcedMenu.react("😔");
             announcedMenu.react("💔")
         }
+    }
+
+    async MenuReaction(reaction, user) {
+        if (reaction.message.channelId !== this.channel) return;
+        const member = reaction.message.guild.members.cache.get(user.id);
+
+        if (reaction.emoji.name !== "👍") {
+            return;
+        }
+
+        if (member.roles.cache.has(this.bikkelRoleId)) {
+            member.roles.remove(this.bikkelRoleId);
+            return;
+        }
+
+        member.roles.add(this.bikkelRoleId);
     }
 }
 export { Menu };
