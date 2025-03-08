@@ -42,7 +42,7 @@ const scheduleMenuAnnouncement = (client, menu) => {
 }
 
 const clearRole = (client, roleId) => {
-    const role = client.guilds.roles.cache.get(roleId);
+    const role = client.guild.roles.cache.get(roleId);
     role.members.forEach(member => {
         member.roles.remove(role);
     });
