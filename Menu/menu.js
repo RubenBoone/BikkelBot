@@ -46,7 +46,7 @@ class Menu {
     async activateMenu(interaction) {
         this.isActive = !this.isActive;
         const isPaused = this.isActive ? "active" : "paused"
-        await interaction.reply({content: 'Fetching menu is now:' + isPaused})
+        await interaction.reply({content: 'Fetching menu is now ' + isPaused})
     }
 
     async fetchMenu() {
@@ -98,6 +98,13 @@ class Menu {
 
 
     async ManualMenu(interaction) {
+
+        if (this.isActive === false)
+        {
+            interaction.reply({content: "Menu fetching is turned off!", flags: MessageFlags.Ephemeral})
+            return;
+        }
+
         const channel = this.client.channels.cache.get(this.channel);
         clearChannel(channel);
         clearRole(this.client, this.bikkelRoleId);
