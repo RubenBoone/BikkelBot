@@ -14,4 +14,8 @@ const MenuReaction = (reaction, user, menu) => {
     menu.MenuReaction(reaction, user);
 }
 
-export { SetMenuChannel, ManualMenu, MenuReaction };
+const MenuActivation = (interaction, menu) => {
+    menu.activateMenu(interaction);
+}
+
+export { SetMenuChannel, ManualMenu, MenuReaction, MenuActivation};

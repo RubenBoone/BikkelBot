@@ -12,6 +12,7 @@ class Menu {
         this.menulink = this.settings["menulink"];
         this.bikkelRoleId = this.settings["bikkelRoleId"];
         this.currentMenuMessage = "1347943792409579611";
+        this.isActive = true;
     }
 
     async setChannel(interaction) {
@@ -40,6 +41,12 @@ class Menu {
             updateData("./Data/menuSettings.json", "channel", channel);
             await interaction.reply({ content: `Menu channel set to <#${channel}>` });
         });
+    }
+
+    async activateMenu(interaction) {
+        this.isActive = !this.isActive;
+        const isPaused = this.isActive ? "active" : "paused"
+        await interaction.reply({content: 'Fetching menu is now:' + isPaused})
     }
 
     async fetchMenu() {

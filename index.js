@@ -3,7 +3,7 @@ import { restHandler } from './Utils/restHandler.js';
 import { Bully } from './Bully/bully.js';
 import { Menu } from './Menu/menu.js';
 import { getInsultChance, setInsultChance, getTarget, setTarget, getActive, setActive } from './Commands/insultCommands.js';
-import { ManualMenu, SetMenuChannel, MenuReaction } from './Commands/menuCommands.js';
+import { ManualMenu, SetMenuChannel, MenuReaction, MenuActivation } from './Commands/menuCommands.js';
 import ping from './Commands/ping.js';
 import fs from 'fs';
 import { scheduleMenuAnnouncement } from './Utils/utilities.js';
@@ -47,6 +47,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     // Menu commands
     SetMenuChannel(interaction, menu);
     ManualMenu(interaction, menu);
+    MenuActivation(interaction, menu);
 
     // Bully commands
     getInsultChance(interaction, bully);
