@@ -15,6 +15,8 @@ const MenuReaction = (reaction, user, menu) => {
 }
 
 const MenuActivation = (interaction, menu) => {
+    if (interaction.commandName !== "activatemenu") return;
+
     menu.activateMenu(interaction);
 }
 

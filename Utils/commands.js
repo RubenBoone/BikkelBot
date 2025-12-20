@@ -52,7 +52,7 @@ const commands = [
         "description": "Manually announce the menu",
     },
     {
-        "name": "activateMenu",
+        "name": "activatemenu",
         "description": "Toggle the menu fetching",
     }
 ]
