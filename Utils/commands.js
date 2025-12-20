@@ -50,6 +50,10 @@ const commands = [
     {
         "name": "manualmenu",
         "description": "Manually announce the menu",
+    },
+    {
+        "name": "activateMenu",
+        "description": "Toggle the menu fetching",
     }
 ]
 
