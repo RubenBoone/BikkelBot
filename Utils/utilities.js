@@ -15,11 +15,7 @@ const getDateOfTommorow = () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const day = tomorrow.getDate();
-    const month = tomorrow.getMonth() + 1;
-    const year = tomorrow.getFullYear();
-
-    return `${day}-${month}-${year}`;
+    return tomorrow;
 }
 
 const scheduleMenuAnnouncement = (client, menu) => {

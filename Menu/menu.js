@@ -109,7 +109,16 @@ class Menu {
         clearChannel(channel);
         clearRole(this.client, this.bikkelRoleId);
 
-        const menu = await this.getMenuEmbed(getDateOfTommorow());
+        const menu = await this.getMenuEmbed(getDateOfTommorow().toLocaleDateString("nl-BE"));
+
+        if (getDateOfTommorow().getDay() == 0) return;
+
+        if (getDateOfTommorow().getDay() == 6) {
+            await channel.send("[Link to site](" + this.menulink + ")");
+            await channel.send("Het is weekend... Ook voor mij😔👍...");
+            return;
+        }
+
         if (menu) {
             await channel.send("[Link to site](" + this.menulink + ")");
             const announcedMenu = await channel.send({ embeds: [menu] });
@@ -118,6 +127,7 @@ class Menu {
             announcedMenu.react("👍");
             announcedMenu.react("👎");
         } else {
+            
             await channel.send("[Link to site](" + this.menulink + ")");
             const announcedMenu = await channel.send(`There is no [menu](${this.menulink}) available for tomorrow.`);
             interaction ? interaction.reply({ content: "No menu available for tomorrow.", flags: MessageFlags.Ephemeral }) : null;
