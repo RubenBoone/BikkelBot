@@ -58,8 +58,7 @@ class Menu {
 
             $('h2').each((_, element) => {
                 let day = $(element).text().trim();
-                day = extractDate(day);
-
+                day = extractDate(day)
 
                 let menuItems = [];
                 let currentElement = $(element).next();
@@ -84,12 +83,13 @@ class Menu {
 
     async getMenuEmbed(day) {
         const menus = await this.fetchMenu();
-        if (!menus || !menus[day]) return null;
+        const formatDate = day.getDate() + "-" + (day.getMonth() + 1) + "-" + day.getFullYear()
+        if (!menus || !menus[formatDate]) return null;
 
         const embed = new EmbedBuilder()
-            .setTitle(`📅 Menu for ${day}`)
+            .setTitle(`📅 Menu for ${formatDate}`)
             .setColor('#ae9a64')
-            .setDescription(menus[day].join('\n'))
+            .setDescription(menus[formatDate].join('\n'))
             .setFooter({ text: `Menu fetched from PXL website`, iconURL: "https://www.pxl.be/media/mn0phfug/image.png" })
             .setAuthor({ name: "BikkelBotje MenuService", iconURL: "https://cdn.discordapp.com/app-icons/1214874304114855967/91703ab3402872d7e39b46cd057c0a61.png?size=256" });
 
@@ -109,7 +109,7 @@ class Menu {
         clearChannel(channel);
         clearRole(this.client, this.bikkelRoleId);
 
-        const menu = await this.getMenuEmbed(getDateOfTommorow().toLocaleDateString("nl-BE"));
+        const menu = await this.getMenuEmbed(getDateOfTommorow());
 
         if (getDateOfTommorow().getDay() == 0) return;
 
