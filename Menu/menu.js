@@ -49,47 +49,48 @@ class Menu {
         await interaction.reply({content: 'Fetching menu is now ' + isPaused})
     }
 
-    async fetchMenu() {
-        this.menulink.forEach(link => {
-            try {
-                const { data } = axios.get(link);
-                const $ = cheerio.load(data);
+    async fetchMenu(link) {
+        try {
+            const { data } = await axios.get(link);
+            const $ = cheerio.load(data);
 
-                let menus = {};
+            let menus = {};
 
-                $('h2').each((_, element) => {
-                    let day = $(element).text().trim();
-                    day = extractDate(day)
+            $('h2').each((_, element) => {
+                let day = $(element).text().trim();
+                day = extractDate(day)
 
-                    let menuItems = [];
-                    let currentElement = $(element).next();
+                let menuItems = [];
+                let currentElement = $(element).next();
 
-                    while (currentElement.length && !currentElement.is('h2')) {
-                        if (currentElement.is('h3')) {
-                            menuItems.push(`\n\n**${currentElement.text().trim()}**`);
-                        } else if (currentElement.is('p')) {
-                            menuItems.push(currentElement.text().trim());
-                        }
-                        currentElement = currentElement.next();
+                while (currentElement.length && !currentElement.is('h2')) {
+                    if (currentElement.is('h3')) {
+                        menuItems.push(`\n\n**${currentElement.text().trim()}**`);
+                    } else if (currentElement.is('p')) {
+                        menuItems.push(currentElement.text().trim());
                     }
-                    menus[day] = menuItems;
-                });
+                    currentElement = currentElement.next();
+                }
+                menus[day] = menuItems;
+            });
 
-                return menus;
-            } catch (error) {
-                console.error(error);
-                return null;
-            }
-        });
+            return menus;
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
     }
 
-    async getMenuEmbed(day) {
-        const menus = await this.fetchMenu();
+    async getMenuEmbed(link, day) {
+        const menus = await this.fetchMenu(link);
         const formatDate = day.getDate() + "-" + (day.getMonth() + 1) + "-" + day.getFullYear()
         if (!menus || !menus[formatDate]) return null;
 
+        let location = "Elfde Linie";
+        if (link.includes("Diepenbeek")) location = "Diepenbeek";
+
         const embed = new EmbedBuilder()
-            .setTitle(`📅 Menu for ${formatDate}`)
+            .setTitle(`📅 Menu for ${formatDate} @ ${location}`)
             .setColor('#ae9a64')
             .setDescription(menus[formatDate].join('\n'))
             .setFooter({ text: `Menu fetched from PXL website`, iconURL: "https://www.pxl.be/media/mn0phfug/image.png" })
@@ -100,42 +101,48 @@ class Menu {
 
 
     async ManualMenu(interaction) {
+        if (this.isActive === false) {
+            return interaction.reply({ content: "Menu fetching is turned off!", flags: MessageFlags.Ephemeral });
+        }
 
-        if (this.isActive === false)
-        {
-            interaction.reply({content: "Menu fetching is turned off!", flags: MessageFlags.Ephemeral})
-            return;
+        // 1. Acknowledge the interaction immediately
+        // This prevents the "Interaction has already been acknowledged" error
+        if (interaction) {
+            await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         }
 
         const channel = this.client.channels.cache.get(this.channel);
         clearChannel(channel);
         clearRole(this.client, this.bikkelRoleId);
 
-        const menu = await this.getMenuEmbed(getDateOfTommorow());
+        // 2. Use a for...of loop instead of forEach
+        // forEach does not play well with async/await in loops
+        for (const link of this.menulink) {
+            const tomorrow = getDateOfTommorow();
+            const menu = await this.getMenuEmbed(link, tomorrow);
 
-        if (getDateOfTommorow().getDay() == 0) return;
+            if (tomorrow.getDay() === 0) continue; // Sunday
 
-        if (getDateOfTommorow().getDay() == 6) {
-            await channel.send("[Link to site](" + this.menulink + ")");
-            await channel.send("Het is weekend... Ook voor mij😔👍...");
-            return;
+            if (tomorrow.getDay() === 6) { // Saturday
+                await channel.send("[Link to site](" + link + ")");
+                await channel.send("Het is weekend... Ook voor mij😔👍...");
+                continue;
+            }
+
+            if (menu) {
+                const announcedMenu = await channel.send({ embeds: [menu] });
+                announcedMenu.react("👍");
+                announcedMenu.react("👎");
+            } else {
+                const announcedMenu = await channel.send(`There is no [menu](${link}) available for tomorrow.`);
+                announcedMenu.react("😔");
+                announcedMenu.react("💔");
+            }
         }
 
-        if (menu) {
-            await channel.send("[Link to site](" + this.menulink + ")");
-            const announcedMenu = await channel.send({ embeds: [menu] });
-            interaction ? interaction.reply({ content: "Menu announced.", flags: MessageFlags.Ephemeral }) : null;
-
-            announcedMenu.react("👍");
-            announcedMenu.react("👎");
-        } else {
-            
-            await channel.send("[Link to site](" + this.menulink + ")");
-            const announcedMenu = await channel.send(`There is no [menu](${this.menulink}) available for tomorrow.`);
-            interaction ? interaction.reply({ content: "No menu available for tomorrow.", flags: MessageFlags.Ephemeral }) : null;
-
-            announcedMenu.react("😔");
-            announcedMenu.react("💔")
+        // 3. Finalize the interaction
+        if (interaction) {
+            await interaction.editReply({ content: "Menu processing complete." });
         }
     }
 
