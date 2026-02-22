@@ -9,7 +9,7 @@ class Menu {
         this.client = client;
         this.settings = readData("./Data/menuSettings.json");
         this.channel = this.settings["channel"];
-        this.menulink = this.settings["menulink"];
+        this.menulink = this.settings["menulink"].split(",");
         this.bikkelRoleId = this.settings["bikkelRoleId"];
         this.currentMenuMessage = "1347943792409579611";
         this.isActive = true;
@@ -50,35 +50,37 @@ class Menu {
     }
 
     async fetchMenu() {
-        try {
-            const { data } = await axios.get(this.menulink);
-            const $ = cheerio.load(data);
+        this.menulink.forEach(link => {
+            try {
+                const { data } = axios.get(link);
+                const $ = cheerio.load(data);
 
-            let menus = {};
+                let menus = {};
 
-            $('h2').each((_, element) => {
-                let day = $(element).text().trim();
-                day = extractDate(day)
+                $('h2').each((_, element) => {
+                    let day = $(element).text().trim();
+                    day = extractDate(day)
 
-                let menuItems = [];
-                let currentElement = $(element).next();
+                    let menuItems = [];
+                    let currentElement = $(element).next();
 
-                while (currentElement.length && !currentElement.is('h2')) {
-                    if (currentElement.is('h3')) {
-                        menuItems.push(`\n\n**${currentElement.text().trim()}**`);
-                    } else if (currentElement.is('p')) {
-                        menuItems.push(currentElement.text().trim());
+                    while (currentElement.length && !currentElement.is('h2')) {
+                        if (currentElement.is('h3')) {
+                            menuItems.push(`\n\n**${currentElement.text().trim()}**`);
+                        } else if (currentElement.is('p')) {
+                            menuItems.push(currentElement.text().trim());
+                        }
+                        currentElement = currentElement.next();
                     }
-                    currentElement = currentElement.next();
-                }
-                menus[day] = menuItems;
-            });
+                    menus[day] = menuItems;
+                });
 
-            return menus;
-        } catch (error) {
-            console.error(error);
-            return null;
-        }
+                return menus;
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        });
     }
 
     async getMenuEmbed(day) {
