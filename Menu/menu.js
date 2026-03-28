@@ -102,7 +102,10 @@ class Menu {
 
     async ManualMenu(interaction) {
         if (this.isActive === false) {
-            return interaction.reply({ content: "Menu fetching is turned off!", flags: MessageFlags.Ephemeral });
+            if (interaction) {
+                return interaction.reply({ content: "Menu fetching is turned off!", flags: MessageFlags.Ephemeral });
+            }
+            return;
         }
 
         // 1. Acknowledge the interaction immediately
@@ -112,6 +115,13 @@ class Menu {
         }
 
         const channel = this.client.channels.cache.get(this.channel);
+        if (!channel) {
+            if (interaction) {
+                await interaction.editReply({ content: "Menu channel is not configured or no longer accessible." });
+            }
+            return;
+        }
+
         clearChannel(channel);
         clearRole(this.client, this.bikkelRoleId);
 

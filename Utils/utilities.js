@@ -32,8 +32,14 @@ const scheduleMenuAnnouncement = (client, menu) => {
     console.log(`Next task scheduled at: ${nextRun.toLocaleString("nl-NL")}`);
 
     setTimeout(() => {
-        menu.ManualMenu(null, client);
-        setInterval(() => menu.ManualMenu(), 24 * 60 * 60 * 1000);
+        menu.ManualMenu().catch(error => {
+            console.error("Scheduled menu run failed:", error);
+        });
+        setInterval(() => {
+            menu.ManualMenu().catch(error => {
+                console.error("Scheduled menu run failed:", error);
+            });
+        }, 24 * 60 * 60 * 1000);
     }, AnnounceMenuTimer);
 }
 
