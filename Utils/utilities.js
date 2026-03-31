@@ -18,7 +18,20 @@ const getDateOfTommorow = () => {
     return tomorrow;
 }
 
+let announceMenuTimeout = null;
+let announceMenuInterval = null;
+
 const scheduleMenuAnnouncement = (client, menu) => {
+
+    if (announceMenuTimeout) {
+        clearTimeout(announceMenuTimeout);
+        announceMenuTimeout = null;
+    }
+
+    if (announceMenuInterval) {
+        clearInterval(announceMenuInterval);
+        announceMenuInterval = null;
+    }
 
     const now = new Date();
     const nextRun = new Date()
@@ -31,11 +44,12 @@ const scheduleMenuAnnouncement = (client, menu) => {
     const AnnounceMenuTimer = nextRun - now;
     console.log(`Next task scheduled at: ${nextRun.toLocaleString("nl-NL")}`);
 
-    setTimeout(() => {
+    announceMenuTimeout = setTimeout(() => {
         menu.ManualMenu().catch(error => {
             console.error("Scheduled menu run failed:", error);
         });
-        setInterval(() => {
+
+        announceMenuInterval = setInterval(() => {
             menu.ManualMenu().catch(error => {
                 console.error("Scheduled menu run failed:", error);
             });
@@ -44,7 +58,12 @@ const scheduleMenuAnnouncement = (client, menu) => {
 }
 
 const clearRole = (client, roleId) => {
-    const role = client.guilds.cache.first().roles.cache.find(r => r.id === roleId);
+    const guild = client.guilds.cache.first();
+    if (!guild) return;
+
+    const role = guild.roles.cache.find(r => r.id === roleId);
+    if (!role) return;
+
     role.members.forEach(member => {
         member.roles.remove(role);
     });

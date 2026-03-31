@@ -31,16 +31,22 @@ class Menu {
             flags: MessageFlags.Ephemeral
         });
 
-        const channelCollector = reply.createMessageComponentCollector({
-            ComponentType: ComponentType.ChannelSelect
-        });
+        try {
+            const selectedInteraction = await reply.awaitMessageComponent({
+                componentType: ComponentType.ChannelSelect,
+                time: 60_000
+            });
 
-        channelCollector.on("collect", async (interaction) => {
-            const channel = interaction.values[0];
+            const channel = selectedInteraction.values[0];
             this.settings["channel"] = channel;
             updateData("./Data/menuSettings.json", "channel", channel);
-            await interaction.reply({ content: `Menu channel set to <#${channel}>` });
-        });
+            await selectedInteraction.reply({ content: `Menu channel set to <#${channel}>` });
+        } catch {
+            await interaction.followUp({
+                content: "Geen kanaal geselecteerd binnen 60 seconden.",
+                flags: MessageFlags.Ephemeral
+            });
+        }
     }
 
     async activateMenu(interaction) {

@@ -24,7 +24,7 @@ const client = new Client({
     ]
 });
 
-client.on(Events.ClientReady, () => {
+client.once(Events.ClientReady, () => {
     console.log(`Logged in as ${client.user.tag}`);
 
     bully = new Bully();

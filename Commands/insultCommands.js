@@ -32,16 +32,20 @@ const setTarget = async (interaction, bully) => {
         flags: MessageFlags.Ephemeral
     });
 
-    const targetCollector = targetReply.createMessageComponentCollector(
-        {
-            componentType: ComponentType.UserSelect
-        }
-    );
+    try {
+        const selectedInteraction = await targetReply.awaitMessageComponent({
+            componentType: ComponentType.UserSelect,
+            time: 60_000
+        });
 
-    targetCollector.on("collect", async (interaction) => {
-        bully.setTarget(interaction.values[0]);
-        await interaction.reply({ content: `Target set to <@${interaction.values[0]}>` });
-    });
+        bully.setTarget(selectedInteraction.values[0]);
+        await selectedInteraction.reply({ content: `Target set to <@${selectedInteraction.values[0]}>` });
+    } catch {
+        await interaction.followUp({
+            content: "Geen gebruiker geselecteerd binnen 60 seconden.",
+            flags: MessageFlags.Ephemeral
+        });
+    }
 }
 
 const setActive = (interaction, bully) => {
